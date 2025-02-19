@@ -1,4 +1,7 @@
-import { useEffect, useState } from "react"; import axios from "axios"; import { Line } from "react-chartjs-2"; import "chart.js/auto";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Line } from "react-chartjs-2";
+import Chart from "chart.js/auto"; // Ensure this is imported
 
 function Dashboard() { const [user, setUser] = useState(null); const [transactions, setTransactions] = useState([]); const [balance, setBalance] = useState(0);
 
