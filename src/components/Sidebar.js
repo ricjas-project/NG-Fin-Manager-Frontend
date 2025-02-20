@@ -1,21 +1,14 @@
-import { Drawer, List, ListItem, ListItemText } from "@mui/material";
 import { Link } from "react-router-dom";
 
-const Sidebar = () => {
+function Sidebar() {
   return (
-    <Drawer variant="permanent" anchor="left">
-      <List>
-        <ListItem button component={Link} to="/dashboard">
-          <ListItemText primary="Dashboard" />
-        </ListItem>
-        <ListItem button component={Link} to="/transactions">
-          <ListItemText primary="Transactions" />
-        </ListItem>
-        <ListItem button component={Link} to="/reports">
-          <ListItemText primary="Reports" />
-        </ListItem>
-      </List>
-    </Drawer>
+    <nav>
+      <ul>
+        <li><Link to="/dashboard">Dashboard</Link></li>
+        <li><Link to="/admin">Admin Panel</Link></li>
+      </ul>
+    </nav>
   );
-};
+}
+
 export default Sidebar;

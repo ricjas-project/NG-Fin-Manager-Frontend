@@ -1,25 +1,19 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Sidebar from "./components/Sidebar";
-import TopBar from "./components/TopBar";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom"; import Login from "./pages/Login"; 
 import Dashboard from "./pages/Dashboard";
-import Transactions from "./pages/Transactions";
-import Reports from "./pages/Reports";
+import AddUser from "./pages/AddUser";
 
-function App() {
-  return (
-    <Router>
-      <TopBar />
-      <div style={{ display: "flex" }}>
-        <Sidebar />
-        <div style={{ marginLeft: 250, padding: 20, width: "100%" }}>
-          <Routes>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/transactions" element={<Transactions />} />
-            <Route path="/reports" element={<Reports />} />
-          </Routes>
-        </div>
-      </div>
-    </Router>
-  );
+function App() 
+{ 
+return 
+( 
+<Router> 
+<Routes> 
+<Route path="/" element={<Login />} /> 
+<Route path="/dashboard" element={<Dashboard />} /> 
+<Route path="/add-user" element={<AddUser />} />
+</Routes> 
+</Router> 
+); 
 }
+
 export default App;
