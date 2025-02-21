@@ -17,8 +17,7 @@ alert("Error adding user");
  } 
 };
 
-return 
-( 
+return ( 
 <form onSubmit={handleSubmit}> 
 <input type="text" placeholder="Name" onChange={e => setForm({...form, name: e.target.value})} /> 
 <input type="email" placeholder="Email" onChange={e => setForm({...form, email: e.target.value})} /> 
