@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/global.css";
+import axios from "axios";
+import CONFIG from "../config"; // ✅ Import config file
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -8,29 +9,44 @@ function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    if (email === "ricjas@live.com" && password === "Ricky@123") {
+  useEffect(() => {
+    // ✅ Redirect if already logged in
+    if (localStorage.getItem("token")) {
       navigate("/dashboard");
-    } else {
-      setError("Invalid Credentials. Please try again.");
+    }
+  }, [navigate]);
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post(CONFIG.AUTH.LOGIN, { email, password });
+      localStorage.setItem("token", response.data.token); // ✅ Save auth token
+      navigate("/dashboard");
+    } catch (err) {
+      setError("Invalid credentials. Please try again.");
     }
   };
 
   return (
     <div className="login-container">
-      <h2>NG-FIN-MANAGER 2 - Login</h2>
-      <input
-        type="email"
-        placeholder="Email"
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleLogin}>Login</button>
-      {error && <p className="error-text">{error}</p>}
+      <h2>NG-FIN-MANAGER 2</h2>
+      <img src="/logo.png" alt="Logo" className="logo" /> {/* ✅ Branding */}
+      <div className="login-box">
+        <h3>Login</h3>
+        {error && <p className="error-message">{error}</p>}
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button onClick={handleLogin}>Login</button>
+      </div>
     </div>
   );
 }

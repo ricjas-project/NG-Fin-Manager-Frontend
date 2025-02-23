@@ -1,35 +1,65 @@
-const axios = require("axios");
-require("dotenv").config();
+import axios from "axios";
+import CONFIG from "../config"; // ✅ Import Config File
 
 const apiService = {
+  // ✅ Get Fake KYC Data
   async getFakeKYC() {
-    const response = await axios.get(process.env.FAKEID_API);
-    return response.data;
+    try {
+      const response = await axios.get(CONFIG.API_SERVICES.FAKE_KYC);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching Fake KYC:", error);
+      throw error;
+    }
   },
 
+  // ✅ Validate IBAN
   async validateIBAN(iban) {
-    const response = await axios.get(`${process.env.IBAN_API}/${iban}`);
-    return response.data;
+    try {
+      const response = await axios.get(`${CONFIG.API_SERVICES.IBAN_VALIDATION}/${iban}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error validating IBAN:", error);
+      throw error;
+    }
   },
 
+  // ✅ Send SMS
   async sendSMS(number, message) {
-    const response = await axios.post("https://textbelt.com/text", {
-      phone: number,
-      message: message,
-      key: process.env.TEXTBELT_API_KEY,
-    });
-    return response.data;
+    try {
+      const response = await axios.post(CONFIG.API_SERVICES.SEND_SMS, {
+        phone: number,
+        message: message,
+        key: CONFIG.API_KEYS.TEXTBELT,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error sending SMS:", error);
+      throw error;
+    }
   },
 
+  // ✅ Get Exchange Rate
   async getExchangeRate(currency) {
-    const response = await axios.get(`${process.env.EXCHANGE_RATE_API}/${currency}`);
-    return response.data;
+    try {
+      const response = await axios.get(`${CONFIG.API_SERVICES.EXCHANGE_RATE}/${currency}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching Exchange Rate:", error);
+      throw error;
+    }
   },
 
+  // ✅ Get User Location
   async getUserLocation(ip) {
-    const response = await axios.get(`${process.env.IPINFO_API}/${ip}`);
-    return response.data;
+    try {
+      const response = await axios.get(`${CONFIG.API_SERVICES.GEO_LOCATION}/${ip}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching User Location:", error);
+      throw error;
+    }
   },
 };
 
-module.exports = apiService;
+export default apiService;

@@ -1,30 +1,27 @@
-/* General Styles */
+/* ✅ General Styles */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
     background-color: #f5f5f5;
+    display: flex;
 }
 
-/* Container */
+/* ✅ Container Layout */
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     width: 100%;
     max-width: 400px;
     padding: 20px;
     background: white;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    margin: auto;
 }
 
-/* Logo */
+/* ✅ Logo */
 .logo {
     text-align: center;
     margin-bottom: 20px;
@@ -35,7 +32,7 @@ body {
     height: auto;
 }
 
-/* Form */
+/* ✅ Form */
 .form-group {
     display: flex;
     flex-direction: column;
@@ -57,7 +54,7 @@ body {
     font-size: 16px;
 }
 
-/* Button */
+/* ✅ Button */
 .button {
     width: 100%;
     padding: 10px;
@@ -74,22 +71,92 @@ body {
     background-color: #0056b3;
 }
 
-/* Right Panel Fix */
-.right-panel {
-    position: fixed;
-    right: 0;
-    top: 0;
+/* ✅ Sidebar Styling */
+.sidebar {
     width: 250px;
-    height: 100%;
+    height: 100vh;
     background: #333;
     color: white;
     display: flex;
     flex-direction: column;
     padding: 20px;
-    transition: transform 0.3s ease-in-out;
+    transition: width 0.3s ease-in-out;
 }
 
-/* Collapsed State */
-document.getElementById("togglePanel").addEventListener("click", function() {
-    document.querySelector(".right-panel").classList.toggle("collapsed");
-});
+/* ✅ Collapsed Sidebar */
+.sidebar.collapsed {
+    width: 80px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.sidebar ul li:hover {
+    background: #444;
+}
+
+/* ✅ TopBar Styling */
+.topbar {
+    height: 60px;
+    width: 100%;
+    background: #222;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    justify-content: space-between;
+}
+
+/* ✅ Dashboard Content */
+.dashboard-content {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+/* ✅ User Table */
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.user-table th, .user-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.user-table th {
+    background: #007bff;
+    color: white;
+}
+
+.user-table tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+/* ✅ Responsive Adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100px;
+    }
+
+    .sidebar.collapsed {
+        width: 50px;
+    }
+
+    .topbar {
+        padding: 10px;
+    }
+
+    .dashboard-content {
+        padding: 10px;
+    }
+}

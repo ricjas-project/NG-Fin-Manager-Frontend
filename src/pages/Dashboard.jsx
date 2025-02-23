@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../styles/global.css";
+import Sidebar from "../components/Sidebar";
+import TopBar from "../components/TopBar";
+import axios from "axios";
+import CONFIG from "../config"; // ✅ Import Config File
 
 function Dashboard() {
   const [users, setUsers] = useState([]);
@@ -9,26 +11,33 @@ function Dashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch users
+    // ✅ Redirect to login if no user is stored in localStorage
+    if (!localStorage.getItem("user")) {
+      navigate("/");
+    }
+
+    // ✅ Fetch Users
     axios
-      .get("https://ng-fin-manager.onrender.com/api/users/list")
+      .get(CONFIG.USERS.GET_ALL)
       .then((res) => setUsers(res.data))
       .catch(() => setUsers([]));
 
-    // Fetch transactions
+    // ✅ Fetch Transactions
     axios
-      .get("https://ng-fin-manager.onrender.com/api/transactions")
+      .get(CONFIG.TRANSACTIONS.GET_ALL)
       .then((res) => setTransactions(res.data))
       .catch(() => setTransactions([]));
-  }, []);
+  }, [navigate]);
 
   return (
-    <div className="dashboard-container">
-      <h2>Admin Dashboard</h2>
+    <div>
+      <TopBar />
+      <Sidebar />
+      <div className="dashboard-content">
+        <h2>Admin Dashboard</h2>
 
-      <div className="dashboard-section">
+        {/* ✅ User Management Section */}
         <h3>User Management</h3>
-        <button onClick={() => navigate("/add-user")}>Add User</button>
         <ul>
           {users.map((user) => (
             <li key={user._id}>
@@ -36,20 +45,18 @@ function Dashboard() {
             </li>
           ))}
         </ul>
-      </div>
 
-      <div className="dashboard-section">
+        {/* ✅ Recent Transactions Section */}
         <h3>Recent Transactions</h3>
         <ul>
           {transactions.map((tx) => (
             <li key={tx._id}>
-              ₹{tx.amount} - {tx.status} - {new Date(tx.created_at).toLocaleString()}
+              {tx.amount} - {tx.status} - {new Date(tx.created_at).toLocaleDateString()}
             </li>
           ))}
         </ul>
-      </div>
 
-      <div className="dashboard-actions">
+        {/* ✅ Reports Button */}
         <button onClick={() => navigate("/reports")}>View Reports</button>
       </div>
     </div>
