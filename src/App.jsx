@@ -1,24 +1,38 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import AddUser from "./pages/AddUser";
-import Navbar from "./components/Navbar";
+import AdminPanel from "./pages/AdminPanel";
+import Transactions from "./pages/Transactions";
+import Settings from "./pages/Settings";
 import Sidebar from "./components/Sidebar";
-import "./styles/global.css"; // ✅ Import global styles
+import Navbar from "./components/Navbar";
+import "./styles/global.css";
 
 function App() {
+  // ✅ Check if user is logged in
+  const isAuthenticated = !!localStorage.getItem("token");
+
   return (
     <Router>
       <div className="app-container">
-        <Navbar />
+        {isAuthenticated && <Navbar />}
         <div className="main-content">
-          <Sidebar />
+          {isAuthenticated && <Sidebar />}
           <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/add-user" element={<AddUser />} />
-            {/* ✅ Catch all invalid URLs */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            {/* ✅ Show Login page if not authenticated */}
+            <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login />} />
+            
+            {/* ✅ Protected Routes (Only accessible if logged in) */}
+            {isAuthenticated ? (
+              <>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/admin" element={<AdminPanel />} />
+                <Route path="/transactions" element={<Transactions />} />
+                <Route path="/settings" element={<Settings />} />
+              </>
+            ) : (
+              <Route path="*" element={<Navigate to="/" />} />
+            )}
           </Routes>
         </div>
       </div>

@@ -1,25 +1,24 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import "../styles/global.css";
+import { Link, useNavigate } from "react-router-dom";
 
 function Sidebar() {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/");
+  };
 
   return (
-    <div className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
-      <button className="toggle-btn" onClick={() => setIsCollapsed(!isCollapsed)}>
-        {isCollapsed ? "☰" : "✖"}
-      </button>
-
-      <nav>
-        <ul>
-          <li><Link to="/dashboard">Dashboard</Link></li>
-          <li><Link to="/admin">Admin Panel</Link></li>
-          <li><Link to="/transactions">Transactions</Link></li>
-          <li><Link to="/settings">Settings</Link></li>
-        </ul>
-      </nav>
-    </div>
+    <nav className="sidebar">
+      <ul>
+        <li><Link to="/dashboard">Dashboard</Link></li>
+        <li><Link to="/admin">Admin Panel</Link></li>
+        <li><Link to="/transactions">Transactions</Link></li>
+        <li><Link to="/settings">Settings</Link></li>
+      </ul>
+      <button className="logout-btn" onClick={handleLogout}>Logout</button>
+    </nav>
   );
 }
 
