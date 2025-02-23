@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import TopBar from "../components/TopBar";
 import axios from "axios";
-import CONFIG from "../config"; 
+import CONFIG from "../config";
 
 function Dashboard() {
   const [users, setUsers] = useState([]);
@@ -11,23 +11,35 @@ function Dashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // ✅ Redirect to login if no user is stored in localStorage
-    if (!localStorage.getItem("user")) {
-      navigate("/");
+    // ✅ Redirect if user is not logged in
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/", { replace: true });
+      return;
     }
 
-    // ✅ Fetch Users
-    axios
-      .get(CONFIG.USERS.GET_ALL)
-      .then((res) => setUsers(res.data))
-      .catch(() => setUsers([]));
-
-    // ✅ Fetch Transactions
-    axios
-      .get(CONFIG.TRANSACTIONS.GET_ALL)
-      .then((res) => setTransactions(res.data))
-      .catch(() => setTransactions([]));
+    // ✅ Fetch Users & Transactions
+    fetchUsers();
+    fetchTransactions();
   }, [navigate]);
+
+  const fetchUsers = async () => {
+    try {
+      const res = await axios.get(CONFIG.USERS.GET_ALL);
+      setUsers(res.data);
+    } catch {
+      setUsers([]);
+    }
+  };
+
+  const fetchTransactions = async () => {
+    try {
+      const res = await axios.get(CONFIG.TRANSACTIONS.GET_ALL);
+      setTransactions(res.data);
+    } catch {
+      setTransactions([]);
+    }
+  };
 
   return (
     <div>

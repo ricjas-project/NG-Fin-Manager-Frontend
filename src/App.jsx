@@ -1,11 +1,10 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import AppRoutes from "./routes";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import AddUser from "./pages/AddUser";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
-import "./styles/global.css"; // Import global styles
+import "./styles/global.css"; // ✅ Import global styles
 
 function App() {
   return (
@@ -18,6 +17,8 @@ function App() {
             <Route path="/" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/add-user" element={<AddUser />} />
+            {/* ✅ Catch all invalid URLs */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
       </div>

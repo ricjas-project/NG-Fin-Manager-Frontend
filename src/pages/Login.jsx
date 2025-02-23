@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import CONFIG from "../config"; // ✅ Import config file
+import CONFIG from "../config"; // ✅ Import global config
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -12,15 +12,19 @@ function Login() {
   useEffect(() => {
     // ✅ Redirect if already logged in
     if (localStorage.getItem("token")) {
-      navigate("/dashboard");
+      navigate("/dashboard", { replace: true });
     }
   }, [navigate]);
 
   const handleLogin = async () => {
     try {
       const response = await axios.post(CONFIG.AUTH.LOGIN, { email, password });
-      localStorage.setItem("token", response.data.token); // ✅ Save auth token
-      navigate("/dashboard");
+
+      // ✅ Store token & user details
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+
+      navigate("/dashboard", { replace: true });
     } catch (err) {
       setError("Invalid credentials. Please try again.");
     }
