@@ -49,7 +49,7 @@ function Dashboard() {
                       <ListItem key={user._id}>
                         <ListItemText 
                           primary={user.name}
-                          secondary={${user.email} (${user.role})}
+                          secondary={`${user.email} (${user.role})`}
                         />
                       </ListItem>
                     ))}
@@ -67,8 +67,8 @@ function Dashboard() {
                     {transactions.map(tx => (
                       <ListItem key={tx._id}>
                         <ListItemText
-                          primary={₹${tx.amount}}
-                          secondary={${tx.status} - ${new Date(tx.created_at).toLocaleDateString()}}
+                          primary={`₹${tx.amount}`}
+                          secondary={`${tx.status} - ${new Date(tx.created_at).toLocaleDateString()}`}
                         />
                       </ListItem>
                     ))}
