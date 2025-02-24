@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import CONFIG from "../config"; // ✅ Import global config
+import CONFIG from "../config";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -10,21 +10,18 @@ function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // ✅ Redirect if already logged in
     if (localStorage.getItem("token")) {
       navigate("/dashboard", { replace: true });
+      window.location.reload(); // ✅ Force full reload
     }
   }, [navigate]);
 
   const handleLogin = async () => {
     try {
       const response = await axios.post(CONFIG.AUTH.LOGIN, { email, password });
-
-      // ✅ Store token & user details
       localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
-
       navigate("/dashboard", { replace: true });
+      window.location.reload(); // ✅ Ensure proper redirect
     } catch (err) {
       setError("Invalid credentials. Please try again.");
     }
@@ -33,22 +30,12 @@ function Login() {
   return (
     <div className="login-container">
       <h2>NG-FIN-MANAGER 2</h2>
-      <img src="/logo.png" alt="Logo" className="logo" /> {/* ✅ Branding */}
+      <img src="/logo.png" alt="Logo" className="logo" />
       <div className="login-box">
         <h3>Login</h3>
         {error && <p className="error-message">{error}</p>}
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
         <button onClick={handleLogin}>Login</button>
       </div>
     </div>

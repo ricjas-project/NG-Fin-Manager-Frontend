@@ -11,40 +11,22 @@ function Dashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // ✅ Redirect if user is not logged in
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/", { replace: true });
-      return;
+    if (!localStorage.getItem("token")) {
+      navigate("/");
     }
 
-    // ✅ Fetch Users & Transactions
-    fetchUsers();
-    fetchTransactions();
+    axios.get(CONFIG.USERS.GET_ALL)
+      .then((res) => setUsers(res.data))
+      .catch(() => setUsers([]));
+
+    axios.get(CONFIG.TRANSACTIONS.GET_ALL)
+      .then((res) => setTransactions(res.data))
+      .catch(() => setTransactions([]));
   }, [navigate]);
 
-  const fetchUsers = async () => {
-    try {
-      const res = await axios.get(CONFIG.USERS.GET_ALL);
-      setUsers(res.data);
-    } catch {
-      setUsers([]);
-    }
-  };
-
-  const fetchTransactions = async () => {
-    try {
-      const res = await axios.get(CONFIG.TRANSACTIONS.GET_ALL);
-      setTransactions(res.data);
-    } catch {
-      setTransactions([]);
-    }
-  };
-
   return (
-    <div>
+    <div className="dashboard-container">
       <TopBar />
-      <Sidebar />
       <div className="dashboard-content">
         <h2>Admin Dashboard</h2>
 
@@ -67,9 +49,6 @@ function Dashboard() {
             </li>
           ))}
         </ul>
-
-        {/* ✅ Reports Button */}
-        <button onClick={() => navigate("/reports")}>View Reports</button>
       </div>
     </div>
   );

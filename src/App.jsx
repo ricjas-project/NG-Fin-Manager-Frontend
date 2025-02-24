@@ -9,20 +9,16 @@ import Navbar from "./components/Navbar";
 import "./styles/global.css";
 
 function App() {
-  // ✅ Check if user is logged in
   const isAuthenticated = !!localStorage.getItem("token");
 
   return (
     <Router>
       <div className="app-container">
         {isAuthenticated && <Navbar />}
+        {isAuthenticated && <Sidebar />}
         <div className="main-content">
-          {isAuthenticated && <Sidebar />}
           <Routes>
-            {/* ✅ Show Login page if not authenticated */}
             <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login />} />
-            
-            {/* ✅ Protected Routes (Only accessible if logged in) */}
             {isAuthenticated ? (
               <>
                 <Route path="/dashboard" element={<Dashboard />} />
