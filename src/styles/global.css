@@ -1,162 +1,89 @@
-/* ✅ General Styles */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f5f5f5;
-    display: flex;
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* ✅ Container Layout */
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 400px;
-    padding: 20px;
-    background: white;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    margin: auto;
+/* Main Layout */
+.dashboard-container,
+.admin-container,
+.transactions-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5f5f5;
 }
 
-/* ✅ Logo */
-.logo {
-    text-align: center;
-    margin-bottom: 20px;
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.logo img {
-    max-width: 100%;
-    height: auto;
+.content-wrapper {
+  padding: 2rem;
+  flex-grow: 1;
 }
 
-/* ✅ Form */
-.form-group {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin-bottom: 15px;
+/* Data Tables */
+.user-table,
+.transaction-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
 }
 
-.form-group label {
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-}
-
-/* ✅ Button */
-.button {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.button:hover {
-    background-color: #0056b3;
-}
-
-/* ✅ Sidebar Styling */
-.sidebar {
-    width: 250px;
-    height: 100vh;
-    background: #333;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    transition: width 0.3s ease-in-out;
-}
-
-/* ✅ Collapsed Sidebar */
-.sidebar.collapsed {
-    width: 80px;
-}
-
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-}
-
-.sidebar ul li {
-    padding: 10px;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.sidebar ul li:hover {
-    background: #444;
-}
-
-/* ✅ TopBar Styling */
-.topbar {
-    height: 60px;
-    width: 100%;
-    background: #222;
-    color: white;
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-    justify-content: space-between;
-}
-
-/* ✅ Dashboard Content */
-.dashboard-content {
-    flex-grow: 1;
-    padding: 20px;
-}
-
-/* ✅ User Table */
-.user-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-.user-table th, .user-table td {
-    padding: 10px;
-    border: 1px solid #ddd;
+.user-table th,
+.user-table td,
+.transaction-table th,
+.transaction-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
 }
 
 .user-table th {
-    background: #007bff;
-    color: white;
+  background-color: #f8f9fa;
 }
 
-.user-table tr:nth-child(even) {
-    background: #f9f9f9;
+/* Status Indicators */
+.status {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
 }
 
-/* ✅ Responsive Adjustments */
+.status.completed { background: #d4edda; color: #155724; }
+.status.pending { background: #fff3cd; color: #856404; }
+.status.failed { background: #f8d7da; color: #721c24; }
+
+/* Responsive Design */
 @media (max-width: 768px) {
-    .sidebar {
-        width: 100px;
-    }
+  .content-wrapper {
+    padding: 1rem;
+  }
+  
+  .user-table,
+  .transaction-table {
+    display: block;
+    overflow-x: auto;
+  }
+}
 
-    .sidebar.collapsed {
-        width: 50px;
-    }
+/* Form Styling */
+.add-user-form {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-top: 2rem;
+}
 
-    .topbar {
-        padding: 10px;
-    }
-
-    .dashboard-content {
-        padding: 10px;
-    }
+/* Card Styling */
+.MuiCard-root {
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+  border-radius: 12px !important;
 }
