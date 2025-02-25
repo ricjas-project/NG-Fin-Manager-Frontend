@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import CONFIG from "../config";
+import "../styles/global.css";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -11,17 +12,17 @@ function Login() {
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      navigate("/dashboard", { replace: true });
-      window.location.reload(); // ✅ Force full reload
+      navigate("/dashboard");
     }
   }, [navigate]);
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError(""); // Clear previous error
     try {
-      const response = await axios.post(CONFIG.AUTH.LOGIN, { email, password });
+      const response = await axios.post(`${CONFIG.AUTH.LOGIN}`, { email, password });
       localStorage.setItem("token", response.data.token);
-      navigate("/dashboard", { replace: true });
-      window.location.reload(); // ✅ Ensure proper redirect
+      navigate("/dashboard");
     } catch (err) {
       setError("Invalid credentials. Please try again.");
     }
@@ -29,14 +30,17 @@ function Login() {
 
   return (
     <div className="login-container">
-      <h2>NG-FIN-MANAGER 2</h2>
-      <img src="/logo.png" alt="Logo" className="logo" />
       <div className="login-box">
-        <h3>Login</h3>
+        <h2>Welcome to NG-FIN-MANAGER 2</h2>
+        <img src="/logo.png" alt="Logo" className="logo" />
+        
         {error && <p className="error-message">{error}</p>}
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <button onClick={handleLogin}>Login</button>
+        
+        <form onSubmit={handleLogin}>
+          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <button type="submit">Login</button>
+        </form>
       </div>
     </div>
   );

@@ -10,16 +10,21 @@ import "../styles/global.css";
 function Dashboard() {
   const [users, setUsers] = useState([]);
   const [transactions, setTransactions] = useState([]);
+  const [apiStatuses, setApiStatuses] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!localStorage.getItem("token")) navigate("/");
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/"); 
+      return;
+    }
 
     const fetchData = async () => {
       try {
         const [usersRes, transactionsRes] = await Promise.all([
           axios.get(CONFIG.USERS.GET_ALL),
-          axios.get(CONFIG.TRANSACTIONS.GET_ALL)
+          axios.get(CONFIG.TRANSACTIONS.GET_ALL),
         ]);
         setUsers(usersRes.data);
         setTransactions(transactionsRes.data);
@@ -27,8 +32,38 @@ function Dashboard() {
         console.error("Error fetching data:", error);
       }
     };
+
+    const checkAPIs = async () => {
+      const apis = {
+        FakeKYC: `${CONFIG.API_URL}/api/fake-kyc`,
+        IBANValidation: `${CONFIG.API_URL}/api/validate-iban/DE89370400440532013000`,
+        SendSMS: `${CONFIG.API_URL}/api/send-sms`,
+        ExchangeRate: `${CONFIG.API_URL}/api/exchange-rate/USD`,
+        Geolocation: `${CONFIG.API_URL}/api/user-location`,
+        EKOTransfer: `${CONFIG.API_URL}/api/transfer-money`,
+      };
+
+      const statusResults = {};
+      for (const [name, url] of Object.entries(apis)) {
+        try {
+          await axios.get(url);
+          statusResults[name] = "✅ Available";
+        } catch (error) {
+          statusResults[name] = "❌ Unavailable";
+        }
+      }
+      setApiStatuses(statusResults);
+    };
+
     fetchData();
+    checkAPIs();
   }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/");
+  };
 
   return (
     <div className="dashboard-container">
@@ -39,9 +74,9 @@ function Dashboard() {
           <Typography variant="h4" gutterBottom>Admin Dashboard</Typography>
 
           <Grid container spacing={3}>
-            {/* ✅ Users Card */}
+            {/* Users Card */}
             <Grid item xs={12} md={6}>
-              <Card className="dashboard-card">
+              <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>User Management</Typography>
                   <List dense>
@@ -58,9 +93,9 @@ function Dashboard() {
               </Card>
             </Grid>
 
-            {/* ✅ Transactions Card */}
+            {/* Transactions Card */}
             <Grid item xs={12} md={6}>
-              <Card className="dashboard-card">
+              <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>Recent Transactions</Typography>
                   <List dense>
@@ -77,44 +112,32 @@ function Dashboard() {
               </Card>
             </Grid>
 
-            {/* ✅ API Integrations Section */}
+            {/* API Links Section */}
             <Grid item xs={12}>
-              <Card className="dashboard-card">
+              <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>API Integrations</Typography>
-                  <Divider sx={{ marginBottom: 2 }} />
-
-                  <Grid container spacing={2}>
-                    <Grid item xs={6} md={4}>
-                      <Button variant="contained" fullWidth href={`${CONFIG.API_URL}/api/fake-kyc`} target="_blank">
-                        Fake KYC API
-                      </Button>
-                    </Grid>
-                    <Grid item xs={6} md={4}>
-                      <Button variant="contained" fullWidth href={`${CONFIG.API_URL}/api/validate-iban/123456`} target="_blank">
-                        IBAN Validation API
-                      </Button>
-                    </Grid>
-                    <Grid item xs={6} md={4}>
-                      <Button variant="contained" fullWidth href={`${CONFIG.API_URL}/api/send-sms`} target="_blank">
-                        Send SMS API
-                      </Button>
-                    </Grid>
-                    <Grid item xs={6} md={4}>
-                      <Button variant="contained" fullWidth href={`${CONFIG.API_URL}/api/exchange-rate/USD`} target="_blank">
-                        Exchange Rate API
-                      </Button>
-                    </Grid>
-                    <Grid item xs={6} md={4}>
-                      <Button variant="contained" fullWidth href={`${CONFIG.API_URL}/api/user-location/8.8.8.8`} target="_blank">
-                        IP Geolocation API
-                      </Button>
-                    </Grid>
-                  </Grid>
+                  <Divider />
+                  <List dense>
+                    {Object.entries(apiStatuses).map(([apiName, status]) => (
+                      <ListItem key={apiName}>
+                        <ListItemText primary={apiName} secondary={status} />
+                        <Button variant="contained" color="primary" onClick={() => window.open(CONFIG.API_URL + `/api/${apiName.toLowerCase()}`, "_blank")}>
+                          Test API
+                        </Button>
+                      </ListItem>
+                    ))}
+                  </List>
                 </CardContent>
               </Card>
             </Grid>
 
+            {/* Logout Button */}
+            <Grid item xs={12}>
+              <Button variant="contained" color="error" onClick={handleLogout} fullWidth>
+                Logout
+              </Button>
+            </Grid>
           </Grid>
         </div>
       </div>
