@@ -22,6 +22,7 @@ function Sidebar() {
         <li><Link to="/admin">Admin Panel</Link></li>
         <li><Link to="/transactions">Transactions</Link></li>
         <li><Link to="/settings">Settings</Link></li>
+	<li><Link to="/iban-validation">IBAN Validation</Link></li> 
       </ul>
 
       <button className="logout-btn" onClick={handleLogout}>Logout</button>

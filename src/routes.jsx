@@ -4,6 +4,7 @@ import AdminPanel from "./pages/AdminPanel";
 import Transactions from "./pages/Transactions";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
+import IBANValidation from "./pages/IBANValidation";
 
 function AppRoutes() {
   return (
@@ -14,6 +15,7 @@ function AppRoutes() {
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/transactions" element={<Transactions />} />
         <Route path="/settings" element={<Settings />} />
+	<Route path="/iban-validation" element={<IBANValidation />} />
       </Routes>
     </BrowserRouter>
   );
