@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Grid, Card, CardContent, Typography, List, ListItem, ListItemText, Button, Divider } from "@mui/material";
+import { Grid, Card, CardContent, Typography, Button, List, ListItem, ListItemText } from "@mui/material";
 import Sidebar from "../components/Sidebar";
 import TopBar from "../components/TopBar";
 import axios from "axios";
@@ -14,12 +14,8 @@ function Dashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/"); 
-      return;
-    }
-
+    if (!localStorage.getItem("token")) navigate("/");
+    
     const fetchData = async () => {
       try {
         const [usersRes, transactionsRes] = await Promise.all([
@@ -32,38 +28,31 @@ function Dashboard() {
         console.error("Error fetching data:", error);
       }
     };
+    fetchData();
 
-    const checkAPIs = async () => {
-      const apis = {
-        FakeKYC: `${CONFIG.API_URL}/api/fake-kyc`,
-        IBANValidation: `${CONFIG.API_URL}/api/validate-iban/DE89370400440532013000`,
-        SendSMS: `${CONFIG.API_URL}/api/send-sms`,
-        ExchangeRate: `${CONFIG.API_URL}/api/exchange-rate/USD`,
-        Geolocation: `${CONFIG.API_URL}/api/user-location`,
-        EKOTransfer: `${CONFIG.API_URL}/api/transfer-money`,
-      };
+    // ✅ Check API Statuses
+    const checkApis = async () => {
+      const apis = [
+        { name: "Fake KYC", url: `${CONFIG.API_URL}/api/fake-kyc` },
+        { name: "IBAN Validation", url: `${CONFIG.API_URL}/api/validate-iban/DE89370400440532013000` },
+        { name: "Send SMS", url: `${CONFIG.API_URL}/api/send-sms` },
+        { name: "Exchange Rate", url: `${CONFIG.API_URL}/api/exchange-rate/USD` },
+        { name: "EKO Transfer", url: `${CONFIG.API_URL}/api/transfer-money` },
+      ];
 
-      const statusResults = {};
-      for (const [name, url] of Object.entries(apis)) {
+      const statuses = {};
+      for (const api of apis) {
         try {
-          await axios.get(url);
-          statusResults[name] = "✅ Available";
-        } catch (error) {
-          statusResults[name] = "❌ Unavailable";
+          await axios.get(api.url);
+          statuses[api.name] = "Available";
+        } catch {
+          statuses[api.name] = "Unavailable";
         }
       }
-      setApiStatuses(statusResults);
+      setApiStatuses(statuses);
     };
-
-    fetchData();
-    checkAPIs();
+    checkApis();
   }, [navigate]);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/");
-  };
 
   return (
     <div className="dashboard-container">
@@ -73,72 +62,26 @@ function Dashboard() {
         <div className="content-wrapper">
           <Typography variant="h4" gutterBottom>Admin Dashboard</Typography>
 
-          <Grid container spacing={3}>
-            {/* Users Card */}
-            <Grid item xs={12} md={6}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>User Management</Typography>
-                  <List dense>
-                    {users.length > 0 ? users.map(user => (
-                      <ListItem key={user._id}>
-                        <ListItemText 
-                          primary={user.name} 
-                          secondary={`${user.email} (${user.role})`} 
-                        />
-                      </ListItem>
-                    )) : <Typography>No users found</Typography>}
-                  </List>
-                </CardContent>
-              </Card>
-            </Grid>
-
-            {/* Transactions Card */}
-            <Grid item xs={12} md={6}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>Recent Transactions</Typography>
-                  <List dense>
-                    {transactions.length > 0 ? transactions.map(tx => (
-                      <ListItem key={tx._id}>
-                        <ListItemText
-                          primary={`₹${tx.amount}`}
-                          secondary={`${tx.status} - ${new Date(tx.created_at).toLocaleDateString()}`}
-                        />
-                      </ListItem>
-                    )) : <Typography>No transactions found</Typography>}
-                  </List>
-                </CardContent>
-              </Card>
-            </Grid>
-
-            {/* API Links Section */}
-            <Grid item xs={12}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>API Integrations</Typography>
-                  <Divider />
-                  <List dense>
-                    {Object.entries(apiStatuses).map(([apiName, status]) => (
-                      <ListItem key={apiName}>
-                        <ListItemText primary={apiName} secondary={status} />
-                        <Button variant="contained" color="primary" onClick={() => window.open(CONFIG.API_URL + `/api/${apiName.toLowerCase()}`, "_blank")}>
-                          Test API
-                        </Button>
-                      </ListItem>
-                    ))}
-                  </List>
-                </CardContent>
-              </Card>
-            </Grid>
-
-            {/* Logout Button */}
-            <Grid item xs={12}>
-              <Button variant="contained" color="error" onClick={handleLogout} fullWidth>
-                Logout
-              </Button>
-            </Grid>
-          </Grid>
+          {/* ✅ API Integrations */}
+          <Card>
+            <CardContent>
+              <Typography variant="h6">API Integrations</Typography>
+              <List>
+                {Object.keys(apiStatuses).map((apiName) => (
+                  <ListItem key={apiName}>
+                    <ListItemText primary={apiName} secondary={apiStatuses[apiName]} />
+                    <Button
+                      variant="contained"
+                      onClick={() => window.open(`${CONFIG.API_URL}/api/${apiName.toLowerCase().replace(/ /g, "-")}`, "_self")}
+                      disabled={apiStatuses[apiName] === "Unavailable"}
+                    >
+                      TEST API
+                    </Button>
+                  </ListItem>
+                ))}
+              </List>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
