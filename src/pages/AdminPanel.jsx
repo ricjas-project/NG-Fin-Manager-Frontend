@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "../components/Sidebar";
 import TopBar from "../components/TopBar";
-import CONFIG from "../config"; // ✅ Import Config File
+import CONFIG from "../config";
 import "../styles/global.css";
 
 function AdminPanel() {
@@ -16,7 +16,6 @@ function AdminPanel() {
     role: "user",
   });
 
-  // ✅ Fetch users on component load
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -35,7 +34,7 @@ function AdminPanel() {
   const handleAddUser = async () => {
     try {
       await axios.post(CONFIG.USERS.ADD_USER, newUser);
-      fetchUsers(); // Refresh user list
+      fetchUsers();
       alert("User added successfully!");
       setNewUser({ name: "", email: "", password: "", role: "user" });
     } catch (err) {
@@ -46,7 +45,7 @@ function AdminPanel() {
   const handleDeleteUser = async (userId) => {
     try {
       await axios.delete(`${CONFIG.USERS.DELETE_USER}/${userId}`);
-      fetchUsers(); // Refresh user list
+      fetchUsers();
     } catch (err) {
       alert("Error deleting user. Please try again.");
     }
@@ -60,13 +59,9 @@ function AdminPanel() {
         <div className="admin-panel">
           <h2>Admin Panel</h2>
 
-          {/* ✅ Display loading message */}
           {loading && <p>Loading users...</p>}
-
-          {/* ✅ Display error message */}
           {error && <p className="error-message">{error}</p>}
 
-          {/* ✅ User Management Table */}
           {!loading && !error && users.length > 0 ? (
             <table className="user-table">
               <thead>
@@ -94,7 +89,6 @@ function AdminPanel() {
             !loading && <p>No users found.</p>
           )}
 
-          {/* ✅ Add New User Section */}
           <h3>Add New User</h3>
           <div className="add-user-form">
             <input
@@ -107,17 +101,13 @@ function AdminPanel() {
               type="email"
               placeholder="Email"
               value={newUser.email}
-              onChange={(e) =>
-                setNewUser({ ...newUser, email: e.target.value })
-              }
+              onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
             />
             <input
               type="password"
               placeholder="Password"
               value={newUser.password}
-              onChange={(e) =>
-                setNewUser({ ...newUser, password: e.target.value })
-              }
+              onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
             />
             <select
               value={newUser.role}

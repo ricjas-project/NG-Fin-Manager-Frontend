@@ -7,6 +7,7 @@ import Settings from "./pages/Settings";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
 import "./styles/global.css";
+import IBANValidation from "./pages/IBANValidation";
 
 function App() {
   const isAuthenticated = !!localStorage.getItem("token");
@@ -22,6 +23,7 @@ function App() {
             {isAuthenticated ? (
               <>
                 <Route path="/dashboard" element={<Dashboard />} />
+		<Route path="/iban-validation" element={<IBANValidation />} />
                 <Route path="/admin" element={<AdminPanel />} />
                 <Route path="/transactions" element={<Transactions />} />
                 <Route path="/settings" element={<Settings />} />

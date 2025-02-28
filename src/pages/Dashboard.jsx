@@ -1,50 +1,35 @@
-import { Grid, Card, CardContent, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import TopBar from "../components/TopBar";
-import { useUser } from "../context/UserContext";
+import axios from "axios";
+import CONFIG from "../config";
 import "../styles/global.css";
 
 function Dashboard() {
-  const { user } = useUser();
+  const [user, setUser] = useState(null);
+  const [transactions, setTransactions] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) navigate("/");
+    axios.get(`${CONFIG.API_URL}/user/me`, { headers: { Authorization: token }})
+      .then((res) => setUser(res.data))
+      .catch(() => navigate("/"));
+  }, [navigate]);
 
   return (
     <div className="dashboard-container">
-      <Sidebar />
+      <Sidebar role={user?.role} />
       <div className="main-content">
-        <TopBar />
-        
-        <Grid container spacing={3} className="content-grid">
-          {/* Role-based Welcome */}
-          <Grid item xs={12}>
-            <Typography variant="h4" gutterBottom>
-              Welcome {user?.name} ({user?.role?.toUpperCase()})
-            </Typography>
-          </Grid>
-
-          {/* Key Metrics */}
-          <Grid item xs={12} md={user?.role === 'admin' ? 6 : 12}>
-            <Card className="metric-card">
-              <CardContent>
-                <Typography variant="h6">Total Transactions</Typography>
-                <Typography variant="h3">₹12,45,678</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          {user?.role === 'admin' && (
-            <Grid item xs={12} md={6}>
-              <Card className="metric-card">
-                <CardContent>
-                  <Typography variant="h6">Active Users</Typography>
-                  <Typography variant="h3">42</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          )}
-        </Grid>
+        <TopBar user={user} />
+        <div className="content-wrapper">
+          <h2>Welcome, {user?.name}</h2>
+          <p>Your role: {user?.role}</p>
+        </div>
       </div>
     </div>
   );
 }
-
 export default Dashboard;

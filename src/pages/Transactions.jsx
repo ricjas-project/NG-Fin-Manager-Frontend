@@ -9,15 +9,20 @@ function Transactions() {
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const userRole = localStorage.getItem("role"); // Get role from local storage
+    const userId = localStorage.getItem("userId"); // Get user ID for filtering
 
-    // ✅ Fetch transactions on component load
     useEffect(() => {
         fetchTransactions();
     }, []);
 
     const fetchTransactions = async () => {
         try {
-            const response = await axios.get(`${CONFIG.API_URL}/transactions`);
+            let url = `${CONFIG.API_URL}/transactions`;
+            if (userRole !== "admin") {
+                url += `?userId=${userId}`;
+            }
+            const response = await axios.get(url);
             setTransactions(response.data);
             setLoading(false);
         } catch (err) {
@@ -26,7 +31,6 @@ function Transactions() {
         }
     };
 
-    // ✅ Function to style transaction status
     const getStatusClass = (status) => {
         switch (status.toLowerCase()) {
             case "completed":
@@ -48,13 +52,9 @@ function Transactions() {
                 <div className="transactions-page">
                     <h2>Transaction History</h2>
 
-                    {/* ✅ Show error message if any */}
                     {error && <p className="error-message">{error}</p>}
-
-                    {/* ✅ Display loading message */}
                     {loading && <p>Loading transactions...</p>}
 
-                    {/* ✅ Display transaction table */}
                     {!loading && !error && transactions.length > 0 ? (
                         <table className="transaction-table">
                             <thead>
@@ -71,7 +71,7 @@ function Transactions() {
                                         <td>{new Date(tx.created_at).toLocaleString()}</td>
                                         <td>₹{tx.amount}</td>
                                         <td className={getStatusClass(tx.status)}>{tx.status}</td>
-                                        <td>{tx.user_id?.name || "N/A"}</td>
+                                        <td>{userRole === "admin" ? tx.user_id?.name || "N/A" : "You"}</td>
                                     </tr>
                                 ))}
                             </tbody>
