@@ -19,7 +19,7 @@ function App() {
         {isAuthenticated && <Sidebar />}
         <div className="main-content">
           <Routes>
-            <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login />} />
+            <Route path="/" element={isAuthenticated ? <Dashboard /> : <Login />} />
             {isAuthenticated ? (
               <>
                 <Route path="/dashboard" element={<Dashboard />} />

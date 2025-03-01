@@ -11,17 +11,22 @@ function Dashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) return navigate("/");
+    const token = localStorage.getItem("token");  // ✅ Store token correctly
+    if (!token) { 
+      navigate("/"); 
+      return;
+    }
 
-    axios.get(`${CONFIG.API_URL}/user/me`, { headers: { Authorization: `Bearer ${token}` }})
-      .then((res) => setUser(res.data))
-      .catch(() => navigate("/"));
-  }, [navigate]);
+    axios.get(`${CONFIG.API_URL}/user/me`, { 
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    .then((res) => setUser(res.data))
+    .catch(() => navigate("/"));
+  }, [navigate]);  // ✅ Only run once on mount
 
   return (
     <div className="dashboard-container">
-      <Sidebar role={user?.role} /> {/* ✅ Passing Correct Role */}
+      <Sidebar role={user?.role} />
       <div className="main-content">
         <TopBar user={user} />
         <div className="content-wrapper">
