@@ -12,17 +12,19 @@ function Login() {
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      navigate("/dashboard");
+      navigate("/dashboard"); // ✅ Fix: Redirects instantly if already logged in
     }
   }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(""); // Clear previous error
+    setError(""); // Clear previous errors
+
     try {
-      const response = await axios.post(`${CONFIG.AUTH.LOGIN}`, { email, password });
+      const response = await axios.post(`${CONFIG.API_URL}/auth/login`, { email, password });
       localStorage.setItem("token", response.data.token);
-      navigate("/dashboard");
+      localStorage.setItem("role", response.data.role); // ✅ Fix: Store user role
+      navigate("/dashboard"); // ✅ Fix: Redirect instantly after login
     } catch (err) {
       setError("Invalid credentials. Please try again.");
     }

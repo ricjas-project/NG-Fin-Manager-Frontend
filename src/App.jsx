@@ -16,14 +16,13 @@ function App() {
     <Router>
       <div className="app-container">
         {isAuthenticated && <Navbar />}
-        {isAuthenticated && <Sidebar />}
         <div className="main-content">
           <Routes>
-            <Route path="/" element={isAuthenticated ? <Dashboard /> : <Login />} />
+            <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login />} />
             {isAuthenticated ? (
               <>
                 <Route path="/dashboard" element={<Dashboard />} />
-		<Route path="/iban-validation" element={<IBANValidation />} />
+                <Route path="/iban-validation" element={<IBANValidation />} />
                 <Route path="/admin" element={<AdminPanel />} />
                 <Route path="/transactions" element={<Transactions />} />
                 <Route path="/settings" element={<Settings />} />
@@ -37,5 +36,4 @@ function App() {
     </Router>
   );
 }
-
 export default App;
