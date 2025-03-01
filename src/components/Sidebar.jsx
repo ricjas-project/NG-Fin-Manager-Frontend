@@ -5,7 +5,6 @@ import "../styles/global.css";
 function Sidebar({ role }) {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
-  const userRole = localStorage.getItem("role");
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -14,24 +13,29 @@ function Sidebar({ role }) {
   };
 
   return (
-    <nav className={sidebar `${collapsed ? "collapsed" : ""}`}>
+    <nav className={`sidebar ${collapsed ? "collapsed" : ""}`}> {/* ✅ Fixed Class Name */}
       <button className="toggle-btn" onClick={() => setCollapsed(!collapsed)}>
         {collapsed ? "▶" : "◀"}
       </button>
+
       <ul>
         <li><Link to="/dashboard">Dashboard</Link></li>
-
         {role === "admin" && <li><Link to="/admin">Admin Panel</Link></li>}
         <li><Link to="/transactions">Transactions</Link></li>
         <li><Link to="/settings">Settings</Link></li>
-{userRole === "admin" && <li><Link to="/admin">Admin Panel</Link></li>}
-        {userRole === "admin" && <li><Link to="/fake-kyc">Fake KYC</Link></li>}
-        {userRole === "admin" && <li><Link to="/iban-validation">IBAN Validation</Link></li>}
-        {userRole === "admin" && <li><Link to="/send-sms">Send SMS</Link></li>}
-        {userRole === "admin" && <li><Link to="/exchange-rate">Exchange Rate</Link></li>}
-	</ul>
+
+        {/* ✅ Show API Links for Admin Only */}
+        {role === "admin" && <>
+          <li><Link to="/fake-kyc">Fake KYC</Link></li>
+          <li><Link to="/iban-validation">IBAN Validation</Link></li>
+          <li><Link to="/send-sms">Send SMS</Link></li>
+          <li><Link to="/exchange-rate">Exchange Rate</Link></li>
+        </>}
+      </ul>
+
       <button className="logout-btn" onClick={handleLogout}>Logout</button>
     </nav>
   );
 }
+
 export default Sidebar;

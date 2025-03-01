@@ -1,6 +1,6 @@
 const CONFIG = {
   // ✅ Frontend URL
-  FRONTEND_URL: process.env.REACT_APP_FRONTEND_URL || "https://ng-fin-manager-frontend.vercel.app",
+  FRONTEND_URL: process.env.REACT_APP_FRONTEND_URL || "https://ng-fin-manager-frontend-68hukbsrh-nge.vercel.app",
 
   // ✅ Backend API URL (Corrected to Render)
   API_URL: process.env.REACT_APP_API_URL || "https://ng-fin-manager.onrender.com",
