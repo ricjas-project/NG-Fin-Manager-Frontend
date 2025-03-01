@@ -14,7 +14,7 @@ function Dashboard() {
     const token = localStorage.getItem("token");
     if (!token) return navigate("/");
 
-    axios.get(`${CONFIG.API_URL}/user/me, { headers: { Authorization: Bearer ${token}` }})
+    axios.get(`${CONFIG.API_URL}/user/me`, { headers: { Authorization: `Bearer ${token}` }})
       .then((res) => setUser(res.data))
       .catch(() => navigate("/"));
   }, [navigate]);
