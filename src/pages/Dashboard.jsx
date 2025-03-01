@@ -21,7 +21,7 @@ function Dashboard() {
 
     // ✅ Prevent infinite navigation loops
     if (loading) {
-      axios.get(`${CONFIG.API_URL}/user/me`, { 
+      axios.get(`${CONFIG.API_URL}/auth/session`, { 
         headers: { Authorization: `Bearer ${token}` }
       })
       .then((res) => {
