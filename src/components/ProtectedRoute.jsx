@@ -1,34 +1,38 @@
-import { Navigate, useLocation } from "react-router-dom";
-import { useEffect } from "react";
-import axios from "axios";
-import CONFIG from "../config";
+import { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { checkSession } from '../services/api';
 
-const ProtectedRoute = ({ children, allowedRoles = ["user", "admin"] }) => {
+const ProtectedRoute = ({ children }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
   const location = useLocation();
-  const token = localStorage.getItem("token");
-  const userRole = localStorage.getItem("role");
 
   useEffect(() => {
+    let isMounted = true;
+    
     const verifySession = async () => {
       try {
-        await axios.get(`${CONFIG.API_URL}/api/session-check`, {
-          withCredentials: true
-        });
+        await checkSession();
+        if (isMounted) setIsLoading(false);
       } catch (error) {
-        localStorage.clear();
-        window.location.href = "/login";
+        if (isMounted) {
+          navigate('/login', {
+            state: { from: location },
+            replace: true
+          });
+        }
       }
     };
+
+    verifySession();
     
-    if (token) verifySession();
-  }, [token]);
+    return () => {
+      isMounted = false;
+    };
+  }, [navigate, location]);
 
-  if (!token) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
-
-  if (!allowedRoles.includes(userRole)) {
-    return <Navigate to="/dashboard" replace />;
+  if (isLoading) {
+    return <div>Loading...</div>;
   }
 
   return children;

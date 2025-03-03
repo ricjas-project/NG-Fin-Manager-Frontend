@@ -1,6 +1,29 @@
 import axios from "axios";
 import CONFIG from "../config"; // ✅ Import Config File
 
+const apiClient = axios.create({
+  baseURL: process.env.VITE_API_URL,
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json"
+  }
+});
+
+
+// Session check implementation
+export const checkSession = async () => {
+  try {
+    const response = await apiClient.get('/auth/session');
+    return response.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    }
+    throw error;
+  }
+};
+
 const apiService = {
   // ✅ Get Fake KYC Data
   async getFakeKYC() {
