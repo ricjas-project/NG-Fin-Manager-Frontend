@@ -19,7 +19,7 @@ const CONFIG = {
     ADD_USER: `${process.env.REACT_APP_API_URL || "https://ng-fin-manager.onrender.com"}/users/add`,
     DELETE_USER: `${process.env.REACT_APP_API_URL || "https://ng-fin-manager.onrender.com"}/users/delete`,
     UPDATE_USER: `${process.env.REACT_APP_API_URL || "https://ng-fin-manager.onrender.com"}/users/update`,
-    ME: `${process.env.REACT_APP_API_URL || "https://ng-fin-manager.onrender.com"}/users/me, // ✅ Ensure `me` endpoint works
+    ME: `${process.env.REACT_APP_API_URL || "https://ng-fin-manager.onrender.com"}/users/me,` // ✅ Fixed syntax error
   },
 
   // ✅ Transactions API

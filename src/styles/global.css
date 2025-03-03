@@ -18,82 +18,54 @@ body {
 /* Layout Grid */
 .dashboard-container {
   display: grid;
-  grid-template-rows: 20% 80%; /* Header 20%, Content 80% */
-  grid-template-columns: 20% 80%; /* Sidebar 20%, Main 80% */
+  grid-template-columns: 240px 1fr;
+  grid-template-rows: 60px 1fr;
   height: 100vh;
-  transition: grid-template-columns 0.3s ease-in-out;
+  background: #f8f9fa;
 }
 
-.dashboard-container.collapsed {
-  grid-template-columns: 5% 95%; /* Sidebar Collapsed */
-}
-
-/* Header Styling */
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 20px;
+/* Header Row */
+.header-row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 240px 1fr 100px;
+  height: 60px;
   background: #2c3e50;
   color: white;
-  height: 100%;
+  padding: 0 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 1000;
 }
 
-.header1 { width: 20%; }
-.header3 { width: 75%; text-align: center; }
-.header2 { width: 5%; text-align: right; }
-
-/* Sidebar Styling */
+/* Sidebar */
 .sidebar {
-  background: #333;
+  grid-row: 2;
+  background: #34495e;
   color: white;
-  display: flex;
-  flex-direction: column;
+  transition: all 0.3s ease;
   padding: 20px;
-  height: 100%;
-  transition: width 0.3s ease-in-out;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .sidebar.collapsed {
-  width: 5%;
+  width: 60px;
+  padding: 20px 5px;
 }
 
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-}
-
-.sidebar ul li {
-  padding: 10px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.sidebar ul li:hover {
-  background: #444;
-}
-
-.toggle-btn {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 18px;
-  cursor: pointer;
-  margin-bottom: 15px;
-}
-
-/* Content Display Area */
-.content-wrapper {
+/* Content Area */
+.content-area {
+  grid-column: 2;
+  grid-row: 2;
+  padding: 2rem;
   overflow-y: auto;
-  padding: 20px;
-  background: white;
-  height: 100%;
+  background: #ffffff;
 }
 
-/* Role-Based Visibility */
+/* Role-based Visibility */
 .admin-only { display: none; }
 .user-only { display: none; }
 
-.admin .admin-only { display: block; }
-.user .user-only { display: block; }
+body[data-role="admin"] .admin-only,
+body[data-role="user"] .user-only {
+  display: block;
+}
