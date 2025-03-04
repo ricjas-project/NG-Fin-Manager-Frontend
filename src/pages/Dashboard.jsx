@@ -14,10 +14,12 @@ function Dashboard() {
   useEffect(() => {
     axios.get(CONFIG.AUTH.SESSION, CONFIG.AXIOS_CONFIG)
       .then((res) => {
+        console.log("✅ Session Data:", res.data);
         setUser(res.data);
         setLoading(false);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error("❌ Axios Error:", err.response ? err.response.data : err);
         localStorage.removeItem("token");  // ✅ Clear token if invalid session
         navigate("/");
       });

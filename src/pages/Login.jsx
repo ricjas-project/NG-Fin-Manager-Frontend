@@ -17,7 +17,7 @@ function Login() {
           navigate("/dashboard"); // ✅ Redirect only if session exists
         }
       })
-      .catch(() => {});  // Ignore errors
+      .catch((err) => console.error("❌ Session Error:", err.response ? err.response.data : err));
   }, [navigate]);
 
   const handleLogin = async (e) => {
@@ -29,8 +29,10 @@ function Login() {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("role", response.data.role);
 
-      navigate("/dashboard"); 
+      console.log("✅ Login Successful:", response.data);
+      navigate("/dashboard");
     } catch (err) {
+      console.error("❌ Login Error:", err.response ? err.response.data : err);
       setError("Invalid credentials. Please try again.");
     }
   };
