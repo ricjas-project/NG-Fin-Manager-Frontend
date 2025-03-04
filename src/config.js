@@ -50,7 +50,7 @@ const CONFIG = {
     headers: {
       "Content-Type": "application/json"
     },
-    withCredentials: true // ✅ Ensures cookies are included in API calls
+    withCredentials: true, // ✅ Ensures cookies are included in API calls
   }
 };
 
