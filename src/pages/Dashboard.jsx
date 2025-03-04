@@ -8,30 +8,20 @@ import "../styles/global.css";
 
 function Dashboard() {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      navigate("/");
-      return;
-    }
-
-    if (loading) {
-      axios
-        .get(CONFIG.AUTH.SESSION, CONFIG.AXIOS_CONFIG)
-        .then((res) => {
-          setUser(res.data);
-          setLoading(false);
-        })
-        .catch(() => {
-          localStorage.removeItem("token"); // ✅ Remove invalid token
-          navigate("/");
-        });
-    }
-  }, [navigate, loading]);
+    axios.get(CONFIG.AUTH.SESSION, CONFIG.AXIOS_CONFIG)
+      .then((res) => {
+        setUser(res.data);
+        setLoading(false);
+      })
+      .catch(() => {
+        localStorage.removeItem("token");  // ✅ Clear token if invalid session
+        navigate("/");
+      });
+  }, [navigate]);
 
   return (
     <div className="dashboard-container">

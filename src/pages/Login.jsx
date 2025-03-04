@@ -11,9 +11,13 @@ function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      navigate("/dashboard"); // ✅ Redirect if already logged in
-    }
+    axios.get(CONFIG.AUTH.SESSION, CONFIG.AXIOS_CONFIG)
+      .then((res) => {
+        if (res.data.user) {
+          navigate("/dashboard"); // ✅ Redirect only if session exists
+        }
+      })
+      .catch(() => {});  // Ignore errors
   }, [navigate]);
 
   const handleLogin = async (e) => {
@@ -22,11 +26,10 @@ function Login() {
 
     try {
       const response = await axios.post(CONFIG.AUTH.LOGIN, { email, password }, CONFIG.AXIOS_CONFIG);
-      
       localStorage.setItem("token", response.data.token);
-      localStorage.setItem("role", response.data.role); // ✅ Store user role
+      localStorage.setItem("role", response.data.role);
 
-      navigate("/dashboard");
+      navigate("/dashboard"); 
     } catch (err) {
       setError("Invalid credentials. Please try again.");
     }
