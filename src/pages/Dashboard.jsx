@@ -8,32 +8,30 @@ import "../styles/global.css";
 
 function Dashboard() {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);  // ✅ Prevent multiple calls
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    
+
     if (!token) {
-      navigate("/");  
+      navigate("/");
       return;
     }
 
-    // ✅ Prevent infinite navigation loops
     if (loading) {
-      axios.get(`${CONFIG.API_URL}/auth/session`, { 
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      .then((res) => {
-        setUser(res.data);
-        setLoading(false);
-      })
-      .catch(() => {
-        localStorage.removeItem("token");  // ✅ Remove invalid token
-        navigate("/");  
-      });
+      axios
+        .get(CONFIG.AUTH.SESSION, CONFIG.AXIOS_CONFIG)
+        .then((res) => {
+          setUser(res.data);
+          setLoading(false);
+        })
+        .catch(() => {
+          localStorage.removeItem("token"); // ✅ Remove invalid token
+          navigate("/");
+        });
     }
-  }, [navigate, loading]);  // ✅ Only runs once
+  }, [navigate, loading]);
 
   return (
     <div className="dashboard-container">

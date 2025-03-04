@@ -1,15 +1,9 @@
 import axios from "axios";
+import CONFIG from "../config";
 
-// Use environment variable for API base URL
-const API_URL = `${import.meta.env.VITE_API_URL}/api`;
-
-// Axios Instance with CORS Support
 const apiClient = axios.create({
-  baseURL: API_URL,
-  withCredentials: true, // Allow cookies & authentication
-  headers: {
-    "Content-Type": "application/json",
-  },
+  baseURL: CONFIG.API_URL,
+  ...CONFIG.AXIOS_CONFIG, // ✅ Ensure AXIOS_CONFIG is used globally
 });
 
 // Fetch Transactions Function
@@ -20,5 +14,16 @@ export const fetchTransactions = async () => {
   } catch (error) {
     console.error("Error fetching transactions:", error);
     throw error;
+  }
+};
+
+// Fetch User Session
+export const fetchUserSession = async () => {
+  try {
+    const response = await apiClient.get(CONFIG.AUTH.SESSION);
+    return response.data;
+  } catch (error) {
+    console.error("Session fetch error:", error);
+    return null;
   }
 };
