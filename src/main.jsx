@@ -4,10 +4,14 @@ import { BrowserRouter } from "react-router-dom"; // ✅ Ensure routing works
 import App from "./App";
 import "./styles/global.css"; // ✅ Ensure global styles are loaded
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <BrowserRouter>
+// ✅ Fix: Ensure React App Mounts Properly
+const rootElement = document.getElementById("root");
+if (!rootElement) {
+  console.error("❌ Root element not found!");
+} else {
+  ReactDOM.createRoot(rootElement).render(
+    <React.StrictMode>
       <App />
-    </BrowserRouter>
-  </React.StrictMode>
-);
+    </React.StrictMode>
+  );
+}
