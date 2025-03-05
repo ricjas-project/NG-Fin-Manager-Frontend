@@ -1,17 +1,14 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export default defineConfig({
   plugins: [react()],
-  base: "/", // ✅ Ensure base path is correct
-  build: {
-    outDir: "dist",
-    rollupOptions: {
-      input: "./index.html", // ✅ Fix path issue
-    },
-  },
   server: {
-    port: 5173,
-    open: true,
+    proxy: {
+      "/auth": process.env.REACT_APP_API_URL,
+    },
   },
 });

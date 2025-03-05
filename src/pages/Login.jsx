@@ -11,8 +11,7 @@ function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get(CONFIG.AUTH.SESSION, CONFIG.AXIOS_CONFIG)
+    axios.get(CONFIG.AUTH.SESSION, CONFIG.AXIOS_CONFIG)
       .then((res) => {
         if (res.data.user) {
           console.log("✅ Active Session:", res.data);
@@ -32,10 +31,7 @@ function Login() {
       const response = await axios.post(
         CONFIG.AUTH.LOGIN,
         { email, password },
-        {
-          ...CONFIG.AXIOS_CONFIG,
-          withCredentials: true, // ✅ Explicitly set here
-        }
+        CONFIG.AXIOS_CONFIG
       );
 
       console.log("✅ Login Successful:", response.data);
@@ -55,20 +51,8 @@ function Login() {
         {error && <p className="error-message">{error}</p>}
 
         <form onSubmit={handleLogin}>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           <button type="submit">Login</button>
         </form>
       </div>
