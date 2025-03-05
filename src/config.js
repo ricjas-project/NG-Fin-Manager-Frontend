@@ -7,10 +7,10 @@ const CONFIG = {
 
   // ✅ Authentication Endpoints (Fixed URLs)
   AUTH: {
-    LOGIN: "https://ng-fin-manager.onrender.com/auth/login",
-    REGISTER: "https://ng-fin-manager.onrender.com/auth/register",
-    LOGOUT: "https://ng-fin-manager.onrender.com/auth/logout",
-    SESSION: "https://ng-fin-manager.onrender.com/auth/session" // ✅ Removed extra comma
+    LOGIN: `$ { process.env.REACT_APP_API_URL || "https://ng-fin-manager.onrender.com"}/auth/login`,
+    REGISTER: `$ { process.env.REACT_APP_API_URL || "https://ng-fin-manager.onrender.com"}/auth/register`,
+    LOGOUT: `$ { process.env.REACT_APP_API_URL || "https://ng-fin-manager.onrender.com"}/auth/logout`,
+    SESSION: `$ { process.env.REACT_APP_API_URL || "https://ng-fin-manager.onrender.com"}/auth/session` // ✅ Removed extra comma
   },
 
   // ✅ User Management Endpoints
