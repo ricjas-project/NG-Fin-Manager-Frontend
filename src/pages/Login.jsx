@@ -11,13 +11,17 @@ function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(CONFIG.AUTH.SESSION, CONFIG.AXIOS_CONFIG)
+    axios
+      .get(CONFIG.AUTH.SESSION, CONFIG.AXIOS_CONFIG)
       .then((res) => {
         if (res.data.user) {
-          navigate("/dashboard"); // ✅ Redirect only if session exists
+          console.log("✅ Active Session:", res.data);
+          navigate("/dashboard"); // ✅ Redirect if session exists
         }
       })
-      .catch((err) => console.error("❌ Session Error:", err.response ? err.response.data : err));
+      .catch((err) =>
+        console.error("❌ Session Error:", err.response ? err.response.data : err)
+      );
   }, [navigate]);
 
   const handleLogin = async (e) => {
@@ -25,9 +29,14 @@ function Login() {
     setError("");
 
     try {
-      const response = await axios.post(CONFIG.AUTH.LOGIN, { email, password }, CONFIG.AXIOS_CONFIG);
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("role", response.data.role);
+      const response = await axios.post(
+        CONFIG.AUTH.LOGIN,
+        { email, password },
+        {
+          ...CONFIG.AXIOS_CONFIG,
+          withCredentials: true, // ✅ Explicitly set here
+        }
+      );
 
       console.log("✅ Login Successful:", response.data);
       navigate("/dashboard");
@@ -42,12 +51,24 @@ function Login() {
       <div className="login-box">
         <h2>Welcome to NG-FIN-MANAGER 2</h2>
         <img src="/logo.png" alt="Logo" className="logo" />
-        
+
         {error && <p className="error-message">{error}</p>}
-        
+
         <form onSubmit={handleLogin}>
-          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
           <button type="submit">Login</button>
         </form>
       </div>
