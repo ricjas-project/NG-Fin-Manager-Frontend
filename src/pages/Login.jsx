@@ -11,16 +11,19 @@ function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(CONFIG.AUTH.SESSION, CONFIG.AXIOS_CONFIG)
-      .then((res) => {
-        if (res.data.user) {
-          console.log("✅ Active Session:", res.data);
-          navigate("/dashboard"); // ✅ Redirect if session exists
-        }
-      })
-      .catch((err) =>
-        console.error("❌ Session Error:", err.response ? err.response.data : err)
-      );
+    axios.get(CONFIG.AUTH.SESSION, { 
+      ...CONFIG.AXIOS_CONFIG,
+      withCredentials: true // Added
+    })
+    .then((res) => {
+      if (res.data.user) {
+        console.log("✅ Active Session:", res.data);
+        navigate("/dashboard");
+      }
+    })
+    .catch((err) =>
+      console.error("❌ Session Error:", err.response ? err.response.data : err)
+    );
   }, [navigate]);
 
   const handleLogin = async (e) => {
@@ -31,7 +34,10 @@ function Login() {
       const response = await axios.post(
         CONFIG.AUTH.LOGIN,
         { email, password },
-        CONFIG.AXIOS_CONFIG
+        { 
+          ...CONFIG.AXIOS_CONFIG,
+          withCredentials: true // Added
+        }
       );
 
       console.log("✅ Login Successful:", response.data);

@@ -3,7 +3,10 @@ import CONFIG from "../config";
 
 const apiClient = axios.create({
   baseURL: CONFIG.API_URL,
-  ...CONFIG.AXIOS_CONFIG, // ✅ Ensure AXIOS_CONFIG is used globally
+  withCredentials: true, // Added
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 // Fetch Transactions Function
@@ -23,7 +26,11 @@ export const fetchUserSession = async () => {
     const response = await apiClient.get(CONFIG.AUTH.SESSION);
     return response.data;
   } catch (error) {
+    if (error.response?.status === 401) {
+      console.log("No active session");
+      return null;
+    }
     console.error("Session fetch error:", error);
-    return null;
+    throw error;
   }
 };
