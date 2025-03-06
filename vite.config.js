@@ -1,9 +1,5 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import dotenv from "dotenv";
-
-// Load environment variables
-dotenv.config();
 
 export default defineConfig({
   plugins: [react()],
@@ -11,7 +7,16 @@ export default defineConfig({
   build: {
     outDir: "dist",
     rollupOptions: {
-      input: "index.html", // ✅ Ensure this points to the correct file
+      input: "index.html",
     },
+  },
+  server: {
+    port: process.env.PORT || 4173, // ✅ Render needs an explicit port
+    host: "0.0.0.0",
+    strictPort: true,
+  },
+  preview: {
+    port: process.env.PORT || 4173, // ✅ Ensure preview uses the correct port
+    host: "0.0.0.0",
   },
 });
